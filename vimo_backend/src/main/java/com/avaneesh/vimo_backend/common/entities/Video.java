@@ -38,9 +38,9 @@ public class Video {
     private String filePath;
     private String thumbnailUrl;
 
-    @NotNull(message = "Video visibility cannot be null")
     @Enumerated(EnumType.STRING)
-    private Visibility visibility;
+    @Builder.Default
+    private Visibility visibility = Visibility.PUBLIC;
 
     @Min(value = 0, message = "View count cannot be negative")
     @Builder.Default
