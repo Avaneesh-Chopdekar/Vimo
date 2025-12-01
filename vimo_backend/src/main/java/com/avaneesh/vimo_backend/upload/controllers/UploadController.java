@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/v1/upload")
 @CrossOrigin("*")
-@Tag(name = "Video API")
+@Tag(name = "Upload API")
 public class UploadController {
 
     @Value("${custom.video.hls_path}")
