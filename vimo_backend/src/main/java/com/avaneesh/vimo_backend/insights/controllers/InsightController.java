@@ -26,6 +26,6 @@ public class InsightController {
     public ResponseEntity<MetadataResponse> getMetadata(@PathVariable Long id) {
         Optional<Video> video = insightsService.getVideoById(id);
 
-        return video.map(value -> ResponseEntity.ok().body(MetadataResponse.fromVideo(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return video.map(value -> ResponseEntity.ok().body(MetadataResponse.fromEntity(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

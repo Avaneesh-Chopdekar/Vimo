@@ -21,16 +21,16 @@ public class MetadataResponse {
     private Visibility visibility;
     private LocalDateTime uploadDate;
 
-    public static MetadataResponse fromVideo(Video video) {
-        MetadataResponse response = new MetadataResponse();
-        response.setTitle(video.getTitle());
-        response.setDescription(video.getDescription());
-        response.setThumbnailUrl(video.getThumbnailUrl());
-        response.setViews(video.getViews());
-        response.setLikes(video.getLikes());
-        response.setDislikes(video.getDislikes());
-        response.setVisibility(video.getVisibility());
-        response.setUploadDate(video.getUploadDate());
-        return response;
+    public static MetadataResponse fromEntity(Video video) {
+        return MetadataResponse.builder()
+                .title(video.getTitle())
+                .description(video.getDescription())
+                .thumbnailUrl(video.getThumbnailUrl())
+                .views(video.getViews())
+                .likes(video.getLikes())
+                .dislikes(video.getDislikes())
+                .visibility(video.getVisibility())
+                .uploadDate(video.getUploadDate())
+                .build();
     }
 }
