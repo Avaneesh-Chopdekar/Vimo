@@ -23,15 +23,21 @@ declare module "@adobe/react-spectrum" {
 const App = () => {
   const navigate = useNavigate();
   return (
-    <BrowserRouter>
-      <Provider theme={defaultTheme} router={{ navigate, useHref }}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/upload" element={<UploadPage />} />
-        </Routes>
-      </Provider>
-    </BrowserRouter>
+    <Provider
+      theme={defaultTheme}
+      colorScheme="light"
+      router={{ navigate, useHref }}
+    >
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/upload" element={<UploadPage />} />
+      </Routes>
+    </Provider>
   );
 };
 
-createRoot(document.getElementById("app")!).render(<App />);
+createRoot(document.getElementById("app")!).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
+);
