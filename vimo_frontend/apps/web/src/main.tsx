@@ -13,6 +13,7 @@ import { defaultTheme, Provider } from "@adobe/react-spectrum";
 import "./style.css";
 import HomePage from "./pages/Home";
 import UploadPage from "./pages/Upload";
+import StreamPage from "./pages/Stream";
 
 declare module "@adobe/react-spectrum" {
   interface RouterConfig {
@@ -31,6 +32,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/upload" element={<UploadPage />} />
+        <Route path="/stream/:id" element={<StreamPage />} />
       </Routes>
     </Provider>
   );
