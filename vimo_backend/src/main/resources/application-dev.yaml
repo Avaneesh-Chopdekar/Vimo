@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/vimo_db
+    username: vimo_user
+    password: vimo_password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    format-sql: true
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9011/.well-known/openid-configuration
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+springdoc:
+  swagger-ui:
+    path: /docs
+
+custom:
+  video:
+    path: ${VIDEO_PATH:videos/}
+    hls_path: ${VIDEO_HLS_PATH:videos_hls/}
+
