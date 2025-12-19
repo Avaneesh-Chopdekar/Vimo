@@ -8,6 +8,7 @@ import com.avaneesh.vimo_backend.auth.services.UserService;
 import com.avaneesh.vimo_backend.common.exceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -18,6 +19,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
@@ -33,8 +35,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = User.fromDto(userDto);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setProvider(userDto.getProvider() != null ? userDto.getProvider() : Provider.LOCAL);
-        // TODO: Assign roles to user and hash password
+        // TODO: Assign roles to user
         User savedUser = userRepository.save(user);
 
         return UserDto.fromEntity(savedUser);
