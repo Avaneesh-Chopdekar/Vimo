@@ -1,0 +1,31 @@
+meta {
+  name: register_user
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/v1/auth/register
+  body: json
+  auth: basic
+}
+
+headers {
+  Content-Type: application/json
+  Accept: */*
+}
+
+body:json {
+  {
+    "email": "ooo@mail.com",
+    "name": "ooo",
+    "password": "@Password123",
+    "provider": "LOCAL",
+    "enable": true
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
