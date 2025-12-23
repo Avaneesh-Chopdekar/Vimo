@@ -1,121 +1,131 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
 import {
   Form,
-  Text,
-  TextField,
-  TextArea,
-  FileTrigger,
-  ProgressBar,
-  ButtonGroup,
-  Button,
-} from "@adobe/react-spectrum";
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-export default function UploadPage() {
-  const [file, setFile] = useState<File | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadedUrl, setUploadedUrl] = useState("");
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+export default function VideoUploadForm() {
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  function handleFileSelect(selected: FileList) {
-    const videoFile = selected[0];
+  // Mock states based on your example
+  const [file, setFile] = React.useState<File | null>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+  const [uploadProgress, setUploadProgress] = React.useState(0);
 
-    if (!videoFile) return;
-    if (!videoFile.type.startsWith("video/")) {
-      alert("Please select a video file");
-      return;
+  const form = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
     }
+  };
 
-    setFile(videoFile);
-  }
+  const onSubmit = (values: any) => {
+    console.log({ ...values, file });
+    // Handle submission logic
+  };
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("title", title);
-    formData.append("description", description);
-
-    try {
-      setIsUploading(true);
-
-      const response = await axios.post(
-        "http://localhost:8080/api/v1/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          onUploadProgress: (progressEvent) => {
-            const percent = Math.round(
-              (progressEvent.loaded / progressEvent.total!) * 100,
-            );
-            setUploadProgress(percent);
-          },
-        },
-      );
-
-      // setUploadedUrl(response.data.url);
-      setIsUploading(false);
-    } catch (error) {
-      console.error(error);
-      setIsUploading(false);
-    }
-  }
+  const handleReset = () => {
+    form.reset();
+    setFile(null);
+  };
 
   return (
-    <main className="h-svh flex justify-center items-center flex-col gap-8">
-      <h1 className="text-2xl font-bold text-center">Upload Video</h1>
-
-      <Form onSubmit={handleSubmit} maxWidth="size-3000">
-        <TextField label="Title" value={title} onChange={setTitle} />
-        <TextArea
-          label="Description"
-          value={description}
-          onChange={setDescription}
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="max-w-[300px] space-y-6"
+      >
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter title" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <FileTrigger
-          acceptedFileTypes={["video/*"]}
-          onSelect={(e) => handleFileSelect(e!)}
-        >
-          <Button variant="primary">Select Video</Button>
-        </FileTrigger>
 
-        <div>
-          {file ? <Text>Selected: {file?.name}</Text> : null}
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Enter description" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          {isUploading ? (
-            <ProgressBar
-              label="Uploading..."
-              value={uploadProgress}
-              minValue={0}
-              maxValue={100}
-              showValueLabel
-            />
-          ) : null}
+        <div className="space-y-4">
+          <input
+            type="file"
+            accept="video/*"
+            className="hidden"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            Select Video
+          </Button>
+
+          {file && (
+            <p className="text-sm text-muted-foreground">
+              Selected: {file.name}
+            </p>
+          )}
+
+          {isUploading && (
+            <div className="space-y-2">
+              <p className="text-sm font-medium">Uploading...</p>
+              <Progress value={uploadProgress} className="w-full" />
+              <p className="text-right text-xs text-muted-foreground">
+                {uploadProgress}%
+              </p>
+            </div>
+          )}
         </div>
 
-        <ButtonGroup>
-          <Button
-            type="submit"
-            variant="primary"
-            isDisabled={!file || isUploading}
-          >
+        <div className="flex gap-2">
+          <Button type="submit" disabled={!file || isUploading}>
             Submit
           </Button>
           <Button
-            type="reset"
+            type="button"
             variant="secondary"
-            isDisabled={!file || isUploading}
+            onClick={handleReset}
+            disabled={!file || isUploading}
           >
             Reset
           </Button>
-        </ButtonGroup>
-      </Form>
-    </main>
+        </div>
+      </form>
+    </Form>
   );
 }
