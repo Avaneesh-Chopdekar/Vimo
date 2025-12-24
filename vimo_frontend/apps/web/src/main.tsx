@@ -3,6 +3,8 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 import "./style.css";
+import { Toaster } from "@/components/ui/sonner";
+
 import HomePage from "./pages/Home";
 import UploadPage from "./pages/Upload";
 import StreamPage from "./pages/Stream";
@@ -24,5 +26,6 @@ const App = () => {
 createRoot(document.getElementById("app")!).render(
   <BrowserRouter>
     <App />
+    <Toaster />
   </BrowserRouter>,
 );
